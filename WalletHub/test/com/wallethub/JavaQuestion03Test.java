@@ -25,6 +25,8 @@ public class JavaQuestion03Test extends TestCase {
 
 	public void test_findMostFrequent_A$Path() throws Exception {
 		JavaQuestion03 target = new JavaQuestion03();
+		
+		//chanbe this parameter to your file system.
 		Path file = Paths.get("C:\\tmp\\test numbers.txt");
 		List<String> actual = target.findMostFrequent(file);
 		List<String> expected = Arrays.asList("123456","12345","1234","123","12","1");
