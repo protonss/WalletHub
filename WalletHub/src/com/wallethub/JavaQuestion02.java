@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class JavaQuestion02 {
 
-	public ArrayList<int[]> findComplementary(int k, int[] a) {
+	public ArrayList<int[]> findComplementary(final int k, final int[] a) {
 		ArrayList<int[]> comps = new ArrayList<int[]>();
 
 		for (int i = 0; i < a.length - 1; i++) {

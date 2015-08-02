@@ -2,7 +2,7 @@ package com.wallethub;
 
 public class JavaQuestion01 {
 
-	public boolean isPalindrome(String str) {
+	public boolean isPalindrome(final String str) {
 		return str.equals(this.reverse(str));
 	}
 

@@ -21,7 +21,7 @@ public class JavaQuestion03 {
 	public static void main(String[] args) {
 	}
 
-	public List<String> findMostFrequent(Path file) {
+	public List<String> findMostFrequent(final Path file) {
 		TreeMap<String, Integer> phrases = new TreeMap<String, Integer>();
 		try (BufferedReader br = Files.newBufferedReader(file, Charset.forName(JavaQuestion03.charset))) {
 			while (br.ready()) {
@@ -46,7 +46,7 @@ public class JavaQuestion03 {
 		return truncateList(phrases);
 	}
 
-	private List<String> truncateList(TreeMap<String, Integer> p) {
+	private List<String> truncateList(final TreeMap<String, Integer> p) {
 		TreeMap<String, Integer> sPhrases = new TreeMap<String, Integer>(new MFComparator(p));
 		sPhrases.putAll(p);
 		List<String> phrases = new ArrayList<String>();
