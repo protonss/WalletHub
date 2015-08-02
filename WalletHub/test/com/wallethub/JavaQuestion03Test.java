@@ -8,7 +8,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 public class JavaQuestion03Test extends TestCase {
-
+ 
 	public void test_type() throws Exception {
 		assertNotNull(JavaQuestion03.class);
 	}
