@@ -1,4 +1,4 @@
-
+delimiter $$
 DROP PROCEDURE IF EXISTS SplitColumn $$
 
 CREATE PROCEDURE SplitColumn()
