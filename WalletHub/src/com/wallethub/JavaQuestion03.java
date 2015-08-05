@@ -42,6 +42,7 @@ public class JavaQuestion03 {
 			}
 			br.close();
 		} catch (IOException e) {
+		   System.out.println("Please make sure you have the right txt file.");
 			e.printStackTrace();
 		}
 		return truncateList(phrases);
