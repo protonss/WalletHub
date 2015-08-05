@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class JavaQuestion03 {
@@ -26,8 +27,7 @@ public class JavaQuestion03 {
 			while (br.ready()) {
 				String p = br.readLine();
 				String[] lphrases = p.split("\\|");
-				// This for loop works for a 50 phrase per line file or any
-				// other file. More generic.
+				//This for loop works for a 50 phrase per line file or any other file. More generic.
 				for (String phrase : lphrases) {
 					phrase = phrase.trim();
 					if (phrase.length() <= 0)
@@ -41,7 +41,6 @@ public class JavaQuestion03 {
 			}
 			br.close();
 		} catch (IOException e) {
-			//log some information
 			e.printStackTrace();
 		}
 		return truncateList(phrases);
@@ -50,8 +49,15 @@ public class JavaQuestion03 {
 	private List<String> truncateList(final TreeMap<String, Integer> p) {
 		TreeMap<String, Integer> sPhrases = new TreeMap<String, Integer>(new MFComparator(p));
 		sPhrases.putAll(p);
-		List<String> ret = new ArrayList<String>(sPhrases.keySet());
-		return (JavaQuestion03.listSize - 1 <= sPhrases.size()) ? ret.subList(0, JavaQuestion03.listSize - 1) : ret.subList(0, sPhrases.size());
+		List<String> phrases = new ArrayList<String>();
+		int counter = 0;
+		for (Map.Entry<String, Integer> entry : sPhrases.entrySet()) {
+			phrases.add(entry.getKey());
+			counter++;
+			if (counter >= JavaQuestion03.listSize)
+				break;
+		}
+		return phrases;
 	}
 
 }
