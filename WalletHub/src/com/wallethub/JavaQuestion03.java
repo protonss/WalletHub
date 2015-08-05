@@ -27,7 +27,8 @@ public class JavaQuestion03 {
 			while (br.ready()) {
 				String p = br.readLine();
 				String[] lphrases = p.split("\\|");
-				//This for loop works for a 50 phrase per line file or any other file. More generic.
+				// This for loop works for a 50 phrase per line file or any
+				// other file. More generic.
 				for (String phrase : lphrases) {
 					phrase = phrase.trim();
 					if (phrase.length() <= 0)
