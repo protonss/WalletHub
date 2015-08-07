@@ -55,6 +55,7 @@ public class JavaQuestion03 {
 		int counter = 0;
 		for (Map.Entry<String, Integer> entry : sPhrases.entrySet()) {
 			phrases.add(entry.getKey());
+			sPhrases.remove(entry.getKey());
 			counter++;
 			if (counter >= JavaQuestion03.listSize)
 				break;
