@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,14 +22,12 @@ public class JavaQuestion03 {
    }
 
    public List<String> findMostFrequent(final Path file) {
-      TreeMap<String, Integer> phrases = new TreeMap<String, Integer>();
+      HashMap<String, Integer> phrases = new HashMap<String, Integer>();
       try (BufferedReader br = Files.newBufferedReader(file, Charset.forName(JavaQuestion03.charset))) {
          while (br.ready()) {
-            String p = br.readLine();
-            String[] lphrases = p.split("\\|");
-            // This for loop works for a 50 phrase per line file or any
-            // other file. More generic.
-            for (String phrase : lphrases) {
+            String line = br.readLine();
+            String[] linePhrases = line.split("\\|");
+            for (String phrase : linePhrases) {
                phrase = phrase.trim();
                if (phrase.length() <= 0)
                   continue;
@@ -47,12 +46,12 @@ public class JavaQuestion03 {
       return truncateList(phrases);
    }
 
-   private List<String> truncateList(final TreeMap<String, Integer> p) {
+   private List<String> truncateList(final Map<String, Integer> p) {
       TreeMap<String, Integer> sPhrases = new TreeMap<String, Integer>((a, b) -> p.get(a) > p.get(b) ? -1 : 1);
       sPhrases.putAll(p);
       List<String> phrases = new ArrayList<String>();
       int counter = 0;
-      for (Map.Entry<String, Integer> entry : sPhrases.entrySet()) {
+      for (Map.Entry<String, Integer> entry : sPhrases.entrySet() ) {
          phrases.add(entry.getKey());
          sPhrases.remove(entry.getKey());
          counter++;
