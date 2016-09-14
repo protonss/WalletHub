@@ -14,17 +14,13 @@ public class JavaQuestion01 {
 	 * @return String
 	 */
 	public String reverse(final String str) {
-		char tmp = '\0';
-		char[] astr = str.toCharArray();
-		int l = astr.length;
-		// iterates up to the half of the string
-		// better performance for extremely big strings
-		for (int i = 0; i < (int) l / 2; i++) {
-			tmp = astr[l - i - 1];
-			astr[l - i - 1] = astr[i];
-			astr[i] = tmp;
+		int len = str.length();
+		char[] ca = new char[len];
+		for (int i = 0; i < (int) (len+1) / 2; i++) {
+			ca[i] = str.charAt(len - (i + 1));
+			ca[len - (i + 1)] = str.charAt(i);
 		}
-		return new String(astr);
+		return new String(ca);
 	}
 
 	/**
