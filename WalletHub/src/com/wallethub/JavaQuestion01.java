@@ -16,21 +16,11 @@ public class JavaQuestion01 {
 	public String reverse(final String str) {
 		int len = str.length();
 		char[] ca = new char[len];
-		for (int i = 0; i < (int) (len+1) / 2; i++) {
+		for (int i = 0; i < (int) (len+1) / 2; i++) { //loop over the half string
 			ca[i] = str.charAt(len - (i + 1));
 			ca[len - (i + 1)] = str.charAt(i);
 		}
 		return new String(ca);
 	}
 
-	/**
-	 * Another approach could be the code below But I think that's not the
-	 * objective of this test
-	 * 
-	 * @param str
-	 * @return String
-	 */
-	public String reverse2(String str) {
-		return new StringBuilder(str).reverse().toString();
-	}
 }

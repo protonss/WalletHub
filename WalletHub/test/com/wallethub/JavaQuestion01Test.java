@@ -24,9 +24,6 @@ public class JavaQuestion01Test extends TestCase {
 		assertEquals(" 1", target.reverse("1 "));
 		assertEquals(" ", target.reverse(" "));
 		assertEquals("", target.reverse(""));
-		assertEquals("321", target.reverse(target.reverse("321")));
-		assertEquals("54321", target.reverse("12345"));
-		assertEquals("1234567", target.reverse("7654321"));
 		assertEquals("_WalletHub", target.reverse("buHtellaW_"));
 		assertEquals("!@#$%^&*()", target.reverse(")(*&^%$#@!"));
 		assertEquals("!@#$%^&*()_+=-0987654321", target.reverse("1234567890-=+_)(*&^%$#@!"));
@@ -48,6 +45,9 @@ public class JavaQuestion01Test extends TestCase {
 		assertTrue(target.isPalindrome("123454321"));
 		assertTrue(target.isPalindrome("@#$%y%$#@"));
 		assertTrue(target.isPalindrome("1221"));
+		assertTrue(target.isPalindrome("12521"));
+		assertTrue(target.isPalindrome(""));
+		assertFalse(target.isPalindrome(null));
 	}
 
 }
