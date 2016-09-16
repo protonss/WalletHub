@@ -27,8 +27,7 @@ public class JavaQuestion03Test extends TestCase {
 		JavaQuestion03 target = new JavaQuestion03();
 		
 		//change this parameter to your file system.
-		Path file = Paths.get("C:\\temp\\test numbers.txt");
-		List<String> actual = target.findMostFrequent(file);
+		List<String> actual = target.findMostFrequent("C:\\temp\\test numbers.txt");
 		List<String> expected = Arrays.asList("123456","12345","1234","123","12","1");
 		//assertEquals(expected, actual);
 	}
