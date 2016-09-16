@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,31 +51,48 @@ public class JavaQuestion03 {
 	}
 
 	public void writeToAuxFile(String oPhrase) {
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(auxFile, true))) {
-			try (BufferedReader br = new BufferedReader(new FileReader(auxFile))) {
-				while (br.ready()) {
-					String line = br.readLine();
-					String phrase = line.substring(0, line.indexOf(stringSeparator));
-					Integer occur = Integer.valueOf(line.substring(line.indexOf(stringSeparator) + 1, line.length()));
-					if (oPhrase.equals(phrase)) {
-						// increment occurrance
-						occur++; 
-						
-						bw.write(phrase + stringSeparator + occur.toString() );
-					}
+		try (RandomAccessFile raf = new RandomAccessFile(auxFile, "rw")) {
+			String line;
+			Integer occur = 0;
+			long offset = 0;
+			while ((line = raf.readLine()) != null) {
+				String phrase = line.substring(0, line.indexOf(stringSeparator));
+				occur = Integer.valueOf(line.substring(line.indexOf(stringSeparator) + 1, line.length()));
+				if (oPhrase.equals(phrase)) {
+					occur++;
+					offset = raf.getFilePointer();
+					break;
 				}
-				br.close();
-			} catch (FileNotFoundException e) {
-				System.out.println("File was not found!");
-			} catch (IOException e) {
-				System.out.println("No file found!");
 			}
-			bw.close();
-		} catch (FileNotFoundException e) {
-			System.out.println("Error1!");
-		} catch (IOException e) {
-			System.out.println("Error2!");
+			long length = raf.getFilePointer() - offset;
+			raf.seek(offset);
+			raf.writeBytes(oPhrase + stringSeparator + occur.toString());
+			raf.close();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+
+		/*
+		 * try (BufferedWriter bw = new BufferedWriter(new FileWriter(auxFile,
+		 * true))) { try (BufferedReader br = new BufferedReader(new
+		 * FileReader(auxFile))) { while (br.ready()) { String line =
+		 * br.readLine(); String phrase = line.substring(0,
+		 * line.indexOf(stringSeparator)); Integer occur =
+		 * Integer.valueOf(line.substring(line.indexOf(stringSeparator) + 1,
+		 * line.length())); if (oPhrase.equals(phrase)) { // increment
+		 * occurrance occur++;
+		 * 
+		 * bw.write(phrase + stringSeparator + occur.toString()); } }
+		 * br.close(); } catch (FileNotFoundException e) { System.out.println(
+		 * "File was not found!"); } catch (IOException e) { System.out.println(
+		 * "No file found!"); } bw.close(); } catch (FileNotFoundException e) {
+		 * System.out.println("Error1!"); } catch (IOException e) {
+		 * System.out.println("Error2!"); }
+		 */
 	}
 
 }
