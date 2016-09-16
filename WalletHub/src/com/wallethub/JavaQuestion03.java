@@ -25,20 +25,15 @@ public class JavaQuestion03 {
 	public static void main(String[] args) {
 		try {
 			new JavaQuestion03().findMostFrequent(originalFile);
-			//new JavaQuestion03().test();
+			// new JavaQuestion03().test();
 		} catch (Exception e) {
 			System.out.println("Sorry, but something went wrong");
 		}
 	}
 
 	public List<String> findMostFrequent(final String fileName) throws Exception {
-
-		// BufferedWriter auxWriter = new BufferedWriter(new FileWriter(auxFile));
-		// BufferedReader auxReader= new BufferedReader(new FileReader(auxFile));
-		// BufferedWriter oWriter = new BufferedWriter(new
-		// FileWriter(originalFile));
-
-		try (BufferedReader oReader = Files.newBufferedReader(Paths.get(originalFile), Charset.forName(JavaQuestion03.charset))) {
+		try (BufferedReader oReader = Files.newBufferedReader(Paths.get(originalFile),
+				Charset.forName(JavaQuestion03.charset))) {
 			while (oReader.ready()) {
 				String line = oReader.readLine();
 				String[] linePhrases = line.split("\\|");
@@ -47,8 +42,6 @@ public class JavaQuestion03 {
 				}
 			}
 			oReader.close();
-			// auxReader.close();
-			// oWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(e.getMessage());
@@ -56,47 +49,26 @@ public class JavaQuestion03 {
 		return null;
 	}
 
-	private void writeToAuxFile(String oPhrase) {
-		// BufferedWriter auxWriter = new BufferedWriter(new FileWriter(auxFile));
-		// BufferedReader auxReader =
-		// Files.newBufferedReader(Paths.get(auxFile),Charset.forName(JavaQuestion03.charset));
-		try(BufferedWriter auxWriter = new BufferedWriter(new FileWriter(auxFile))){
-			
-			try(BufferedReader auxReader = Files.newBufferedReader(Paths.get(auxFile),Charset.forName(JavaQuestion03.charset))){
-				
-				while (auxReader.ready()) {
-					String line = auxReader.readLine();
-				}
-				
-			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void test() {
-		try {
-			FileWriter fw = new FileWriter(auxFile, true);
-			BufferedWriter bw = new BufferedWriter(fw);
-
-			try {
-				FileReader fr = new FileReader(auxFile);
-				BufferedReader br = new BufferedReader(fr);
-				String s;
-				while ((s = br.readLine()) != null) {
-					StringTokenizer strtok = new StringTokenizer(s, " ");
-					while (strtok.hasMoreTokens()) {
-						bw.write("\n" + strtok.nextToken());
+	public void writeToAuxFile(String oPhrase) {
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(auxFile, true))) {
+			try (BufferedReader br = new BufferedReader(new FileReader(auxFile))) {
+				while (br.ready()) {
+					String line = br.readLine();
+					String phrase = line.substring(0, line.indexOf(stringSeparator));
+					Integer occur = Integer.valueOf(line.substring(line.indexOf(stringSeparator) + 1, line.length()));
+					if (oPhrase.equals(phrase)) {
+						// increment occurrance
+						occur++; 
+						
+						bw.write(phrase + stringSeparator + occur.toString() );
 					}
-					br.close();
 				}
+				br.close();
 			} catch (FileNotFoundException e) {
 				System.out.println("File was not found!");
 			} catch (IOException e) {
 				System.out.println("No file found!");
 			}
-
 			bw.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("Error1!");
