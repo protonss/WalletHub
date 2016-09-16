@@ -2,16 +2,15 @@ package com.wallethub;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.Map;
+import java.util.StringTokenizer;
 
 public class JavaQuestion03 {
 
@@ -19,66 +18,91 @@ public class JavaQuestion03 {
 
 	// change this parameter for other countries. Recommended UTF-8
 	public static final String charset = "ISO-8859-1";
-	public static final String inputFile = "C:\\temp\\test numbers.txt";
-	public static final String outputFile = "C:\\temp\\result.txt";
+	public static final String originalFile = "C:\\temp\\test numbers.txt";
+	public static final String auxFile = "C:\\temp\\result.txt";
 	public static final String stringSeparator = "|";
 
 	public static void main(String[] args) {
-		new JavaQuestion03().findMostFrequent(inputFile);
+		try {
+			new JavaQuestion03().findMostFrequent(originalFile);
+			//new JavaQuestion03().test();
+		} catch (Exception e) {
+			System.out.println("Sorry, but something went wrong");
+		}
 	}
 
-	public List<String> findMostFrequent(final String fileName) {
+	public List<String> findMostFrequent(final String fileName) throws Exception {
 
-		BufferedWriter ofWriter = null;
-		BufferedWriter ifWriter = null;
-		/*ofWriter = new BufferedWriter(new FileWriter(outputFile));*/
+		// BufferedWriter auxWriter = new BufferedWriter(new FileWriter(auxFile));
+		// BufferedReader auxReader= new BufferedReader(new FileReader(auxFile));
+		// BufferedWriter oWriter = new BufferedWriter(new
+		// FileWriter(originalFile));
 
-		try (BufferedReader ifReader = Files.newBufferedReader(Paths.get(inputFile), Charset.forName(JavaQuestion03.charset))) {
-			while (ifReader.ready()) {
-				String line = ifReader.readLine();
+		try (BufferedReader oReader = Files.newBufferedReader(Paths.get(originalFile), Charset.forName(JavaQuestion03.charset))) {
+			while (oReader.ready()) {
+				String line = oReader.readLine();
 				String[] linePhrases = line.split("\\|");
-				for (String ifPhrase : linePhrases) {
-					try (BufferedReader ofReader = Files.newBufferedReader(Paths.get(outputFile), Charset.forName(JavaQuestion03.charset))) {
-						while (ofReader.ready()) {
-							String ofPhrase = ofReader.readLine().split("\\|")[0];
-							ofWriter = new BufferedWriter(new FileWriter(outputFile));
-							if (ofPhrase.equals(ifPhrase)) { // increment
-								Integer oc = Integer.valueOf(ofReader.readLine().split("\\|")[1]) + 1;
-								ofWriter.write(ifPhrase + stringSeparator + oc.toString());
-							} else { // create
-								ofWriter.write(ifPhrase + stringSeparator + "1");
-							}
-							ofWriter.close();
-						}
-						ofReader.close();
-					}
-					ifWriter.write(String.format("%s%n"));
+				for (String oPhrase : linePhrases) {
+					this.writeToAuxFile(oPhrase);
 				}
 			}
-			ifReader.close();
-		} catch (IOException e) {
-			System.out.println("Please make sure you have the right txt file.");
+			oReader.close();
+			// auxReader.close();
+			// oWriter.close();
 		} catch (Exception e) {
-			System.out.println("Sorry. Something went wrong in my File System");
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
 		}
 		return null;
 	}
 
-	private void writeIntoAuxFile(String phrase, Integer occurs) throws Exception {
-		Path logFile = Paths.get(outputFile);
-		try (BufferedWriter writer = Files.newBufferedWriter(logFile, StandardCharsets.ISO_8859_1, StandardOpenOption.APPEND, StandardOpenOption.WRITE)) {
-			writer.append(phrase + stringSeparator + occurs.toString());
-			writer.newLine();
-			writer.close();
-		} catch (Exception e) {
+	private void writeToAuxFile(String oPhrase) {
+		// BufferedWriter auxWriter = new BufferedWriter(new FileWriter(auxFile));
+		// BufferedReader auxReader =
+		// Files.newBufferedReader(Paths.get(auxFile),Charset.forName(JavaQuestion03.charset));
+		try(BufferedWriter auxWriter = new BufferedWriter(new FileWriter(auxFile))){
+			
+			try(BufferedReader auxReader = Files.newBufferedReader(Paths.get(auxFile),Charset.forName(JavaQuestion03.charset))){
+				
+				while (auxReader.ready()) {
+					String line = auxReader.readLine();
+				}
+				
+			}
+			
+		} catch (IOException e) {
 			e.printStackTrace();
-			throw new Exception();
 		}
 	}
 
-	public static <K, V> void printMap(Map<K, V> map) {
-		for (Map.Entry<K, V> entry : map.entrySet()) {
-			System.out.println(" Occourences : " + entry.getValue() + "  \t Phrase : " + entry.getKey());
+	public void test() {
+		try {
+			FileWriter fw = new FileWriter(auxFile, true);
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			try {
+				FileReader fr = new FileReader(auxFile);
+				BufferedReader br = new BufferedReader(fr);
+				String s;
+				while ((s = br.readLine()) != null) {
+					StringTokenizer strtok = new StringTokenizer(s, " ");
+					while (strtok.hasMoreTokens()) {
+						bw.write("\n" + strtok.nextToken());
+					}
+					br.close();
+				}
+			} catch (FileNotFoundException e) {
+				System.out.println("File was not found!");
+			} catch (IOException e) {
+				System.out.println("No file found!");
+			}
+
+			bw.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("Error1!");
+		} catch (IOException e) {
+			System.out.println("Error2!");
 		}
 	}
+
 }
