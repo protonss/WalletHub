@@ -1,9 +1,9 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `splitColumn`()
+CREATE PROCEDURE `splitColumn`()
 BEGIN
 	DECLARE id int;
-	declare name varchar(50);
-	declare hFns int;
-	declare sepparator char;
+	DECLARE name varchar(50);
+	DECLARE hFns int;
+	DECLARE sepparator char;
 
 	DECLARE c CURSOR FOR  SELECT * FROM sometbl ;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET hFns = 1;
@@ -15,11 +15,11 @@ BEGIN
 
 	OPEN c;
 	SET hFns = 0;
-	set sepparator = '|';
+	SET sepparator = '|';
 	
     REPEAT
 	FETCH c INTO id, name;
-    set name = concat(name, sepparator);
+    SET name = concat(name, sepparator);
 	WHILE (LOCATE(sepparator, name) > 0) 
 	DO
 	  INSERT INTO tmpTb VALUES (id, SUBSTRING_INDEX(name, sepparator, 1 ) );
