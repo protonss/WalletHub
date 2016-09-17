@@ -1,40 +1,37 @@
-delimiter $$
-DROP PROCEDURE IF EXISTS SplitColumn $$
-
-CREATE PROCEDURE SplitColumn()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `splitColumn`()
 BEGIN
-  DECLARE id int;
-  declare name varchar(50);
-  declare bDone int;
-  declare sep char;
+	DECLARE id int;
+	declare name varchar(50);
+	declare hFns int;
+	declare sepparator char;
 
-  DECLARE curs CURSOR FOR  SELECT * FROM sometbl ;
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET bDone = 1;
+	DECLARE c CURSOR FOR  SELECT * FROM sometbl ;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET hFns = 1;
 
-  DROP TEMPORARY TABLE IF EXISTS ResultTable;
-  CREATE TEMPORARY TABLE IF NOT EXISTS ResultTable  (
-    id int, name varchar(50)
-  );
+	DROP TEMPORARY TABLE IF EXISTS tmpTb;
+	CREATE TEMPORARY TABLE IF NOT EXISTS tmpTb  (
+		id int, name varchar(50)
+	);
 
-  OPEN curs;
-  SET bDone = 0;
-  set sep = '|';
-  REPEAT
-    FETCH curs INTO id, name;
-    set name = concat(name,sep);
-    WHILE (LOCATE(sep, name) > 0)
-    DO
-      INSERT INTO ResultTable VALUES (id, CONCAT(UCASE(LEFT(LEFT(name, LOCATE(sep,name) - 1), 1)), SUBSTRING(LEFT(name, LOCATE(sep,name) - 1), 2)));
-      SET name = SUBSTRING(name, LOCATE(sep,name) + 1);
-    END WHILE; 
-  UNTIL bDone END REPEAT;
-  CLOSE curs;  
-END $$
-
-delimiter ;
-
-call wallethub.SplitColumn();
+	OPEN c;
+	SET hFns = 0;
+	set sepparator = '|';
+	
+    REPEAT
+	FETCH c INTO id, name;
+    set name = concat(name, sepparator);
+	WHILE (LOCATE(sepparator, name) > 0) 
+	DO
+	  INSERT INTO tmpTb VALUES (id, SUBSTRING_INDEX(name, sepparator, 1 ) );
+	  SET name = SUBSTRING(name, LOCATE(sepparator,name) + 1);
+	END WHILE; 
+	UNTIL hFns 
+    END REPEAT;
+    
+	CLOSE c;  
+END
 
 /* Testing */
-select * from ResultTable;  
+call splitColumn();
+select * from tmpTb;
   
