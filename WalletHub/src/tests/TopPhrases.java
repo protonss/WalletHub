@@ -1,3 +1,11 @@
+/* 
+ 
+In order to test TopPhrases please run the JUnit test class below
+The expected result are at the bottom of this file.
+ 
+*/
+
+
 package tests;
 
 import java.io.File;
@@ -24,32 +32,64 @@ public class TopPhrases extends TestCase {
 
 		File file = new File(originalFile);
 		FileOutputStream fos = new FileOutputStream(file);
-		for (int i = 0; i < 2; i++)
-			fos.write(new StringBuilder()
-					.append(
-							"Olympics 2012 | PG012 | PG012 | PG012 | PGA | FoA | FoA | FoA | Foobar Candy | CNar Candy | CNar Candy | CNar Candy | CNET | MicroET | MicroET | MicroET | MicroET | Microsoft Bing")
-					.append(System.getProperty("line.separator")).toString().getBytes());
-		for (int i = 0; i < 2; i++)
-			fos.write(
-					new StringBuilder().append(" PGA | FoobA | FoobA | FoobA | Foobar Candy | Olyndy | Olyndy | Olyndy | Olympics 2012").append(System.getProperty("line.separator")).toString().getBytes());
-		for (int i = 0; i < 4; i++)
-			fos.write(new StringBuilder().append("Foobar Candy | Olympics 2012 ").append(System.getProperty("line.separator")).toString().getBytes());
+		StringBuilder st = new StringBuilder();
 		for (int i = 0; i < 20; i++)
-			fos.write(new StringBuilder().append("Foobar Candy ").append(System.getProperty("line.separator")).toString().getBytes());
+			st.append(
+					"Olympics 2012 | PG012 | PG012 | PG012 | PGA | FoA | FoA | FoA | Foobar Candy | CNar Candy | CNar Candy | CNar Candy | CNET | MicroET | MicroET | MicroET | MicroET | Microsoft Bing")
+					.append(System.getProperty("line.separator")).toString().getBytes();
+		for (int i = 0; i < 20; i++)
+			st.append(" PGA | FoobA | FoobA | FoobA | Foobar Candy | Olyndy | Olyndy | Olyndy | Olympics 2012").append(System.getProperty("line.separator")).toString().getBytes();
+		for (int i = 0; i < 40; i++)
+			st.append("Foobar Candy | Olympics 2012 ").append(System.getProperty("line.separator")).toString().getBytes();
+		for (int i = 0; i < 200; i++)
+			st.append("Foobar Candy ").append(System.getProperty("line.separator")).toString().getBytes();
+		fos.write(st.toString().getBytes());
 		fos.close();
 
-		// run method
+		// set initial time
 		Calendar b = Calendar.getInstance();
 		b.setTime(new Date());
 
+		//run method
 		answers.TopPhrases top = new answers.TopPhrases(originalFile, resultFile);
 		top.rank();
 
+		//set final time
 		Calendar e = Calendar.getInstance();
 		e.setTime(new Date());
 
-		long diff = (e.getTimeInMillis() - b.getTimeInMillis()) / 1000;
-		System.out.println(diff);
+		//print time diff in seconds
+		System.out.println( (e.getTimeInMillis() - b.getTimeInMillis()) / 1000 );
+
+		assertTrue(top.makeStringFromResultFile().contains("Foobar Candy|284"));
+
+		top.writeResultFile();
 	}
 
 }
+
+/*
+This is the expected result from the JUnit test class above:
+
+.........100
+..........200
+..........300
+..........400
+..........500
+..........600
+..........700
+..........800
+...done.
+<number>
+Foobar Candy|284                                                                                                  
+Olyndy|90                                                                                                    
+FoobA|88                                                                                                    
+MicroET|86                                                                                                   
+Olympics 2012|80                                                                                                   
+CNar Candy|64                                                                                                   
+FoA|62                                                                                                   
+PG012|60                                                                                                   
+PGA|42                                                                                                   
+Microsoft Bing|29                                                                                                    
+CNET|26                                                                                                   
+ */

@@ -22,7 +22,7 @@ public class TopPhrases {
 
 	public static final String stringSeparator = "|";
 
-	public static final long RECORD_LENGTH = 10;
+	public static final long RECORD_LENGTH = 100;
 	public static final String EMPTY_STRING = " ";
 
 	public TopPhrases(String originalFile, String resultFile) {
@@ -36,7 +36,7 @@ public class TopPhrases {
 		try {
 			deleteTmpFiles();
 
-			/*The three steps described in README file*/
+			/* The three steps described in README file */
 			createResultFile();
 			sortResultFile();
 			truncateResultFile();
@@ -146,14 +146,30 @@ public class TopPhrases {
 	}
 
 	private String paddingRight(String source) {
-		StringBuilder result = new StringBuilder();
 		if (source != null) {
-			result.append(source);
-			for (int i = 0; i < RECORD_LENGTH - source.length(); i++) {
-				result.append(EMPTY_STRING);
+			for (int i = 0; i < RECORD_LENGTH; i++) {
+				source += EMPTY_STRING;
 			}
 		}
-		return result.toString();
+		return source;
+	}
+
+	public void writeResultFile() {
+		try {
+			Helper.writeFile(resultFile);
+		} catch (IOException e) {
+			System.out.println("Could not print result file");
+		}
+	}
+
+	public String makeStringFromResultFile() {
+		String st = "";
+		try {
+			st = Helper.makeStringFromFile(resultFile);
+		} catch (IOException e) {
+			System.out.println("Could not turn the result file into a string");
+		}
+		return st;
 	}
 
 }
@@ -189,6 +205,17 @@ class Helper {
 			}
 			oReader.close();
 		}
+	}
+
+	public static String makeStringFromFile(String file) throws IOException {
+		StringBuilder st = new StringBuilder();
+		try (BufferedReader oReader = Files.newBufferedReader(Paths.get(file), Charset.forName(TopPhrases.charset))) {
+			while (oReader.ready()) {
+				st.append(oReader.readLine());
+			}
+			oReader.close();
+		}
+		return st.toString();
 	}
 
 	public static void renameFile(String oldName, String newName) {
