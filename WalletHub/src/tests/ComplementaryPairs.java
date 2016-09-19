@@ -1,0 +1,82 @@
+package tests;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
+import junit.framework.TestCase;
+
+public class ComplementaryPairs extends TestCase {
+
+	answers.ComplementaryPairs jq2;
+
+	public void test_type() throws Exception {
+		assertNotNull(answers.ComplementaryPairs.class);
+	}
+
+	public void test_instantiation() throws Exception {
+		answers.ComplementaryPairs target = new answers.ComplementaryPairs();
+		assertNotNull(target);
+	}
+
+	public void test_findComplementarySmallArray() throws Exception {
+		// Creating k and a parameters
+		answers.ComplementaryPairs target = new answers.ComplementaryPairs();
+		int k = 7;
+		Integer[] a = new Integer[] { 0, 1, 2, 7, 10, 3, 4 };
+
+		// Creating the expected result
+		List<String> expected = new ArrayList<String>();
+		expected.add("34");
+		expected.add("43");
+		expected.add("70");
+		expected.add("07");
+
+		// Running method
+		List<Integer[]> result = target.findComplementary(k, a);
+
+		// Comparing results
+		result.forEach(r -> {
+			assertTrue(expected.contains(r[0].toString() + r[1].toString()));
+		});
+
+	}
+
+	public void test_findComplementaryArray() throws Exception {
+		// Creating k and a parameters
+		answers.ComplementaryPairs target = new answers.ComplementaryPairs();
+		int k = 7;
+		Integer[] a = new Integer[] { 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				0, 1, 2, 7, 10, 3, 4, 
+				};
+
+		// Creating the expected result
+		List<String> expected = new ArrayList<String>();
+		expected.add("34");
+		expected.add("43");
+		expected.add("70");
+		expected.add("07");
+
+		// Running method
+		List<Integer[]> result = target.findComplementary(k, a);
+
+		// Comparing results
+		result.forEach(r -> {
+			assertTrue(expected.contains(r[0].toString() + r[1].toString()));
+		});
+	}
+
+}

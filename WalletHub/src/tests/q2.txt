@@ -1,0 +1,10 @@
+
+-- Testing
+-- Run the SQL command below 
+ 
+SELECT capFirstWords("UNITED  states   Of   AmERIca");
+
+-- Expected result:
+-- United  States   Of   America
+
+

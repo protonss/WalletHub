@@ -1,22 +1,28 @@
-package com.wallethub;
+package tests;
 
 import static org.junit.Assert.assertNotEquals;
 
 import junit.framework.TestCase;
 
-public class JavaQuestion01Test extends TestCase {
+public class Palindrome extends TestCase {
 
 	public void test_type() throws Exception {
-		assertNotNull(JavaQuestion01.class);
+		assertNotNull(Palindrome.class);
 	}
 
 	public void test_instantiation() throws Exception {
-		JavaQuestion01 target = new JavaQuestion01();
+		answers.Palindrome target = new answers.Palindrome();
 		assertNotNull(target);
 	}
 
-	public void test_reverse_A$String() throws Exception {
-		JavaQuestion01 target = new JavaQuestion01();
+	/**
+	 * I don't need to validate the string itself for null or size since I've done
+	 * this in isPalindrome method
+	 * 
+	 * @throws Exception
+	 */
+	public void test_reverse() throws Exception {
+		answers.Palindrome target = new answers.Palindrome();
 		assertEquals("654321", target.reverse("123456"));
 		assertEquals("123", target.reverse("321"));
 		assertEquals("12", target.reverse("21"));
@@ -35,19 +41,29 @@ public class JavaQuestion01Test extends TestCase {
 		assertNotEquals("54321", target.reverse("123456"));
 		assertNotEquals("54321", target.reverse(" 54321"));
 		assertNotEquals("54321", target.reverse("554321"));
+
+		assertEquals("54321", target.reverse( target.reverse("54321")));
 	}
 
 	public void test_isPalindrome() throws Exception {
-		JavaQuestion01 target = new JavaQuestion01();
+		answers.Palindrome target = new answers.Palindrome();
 		assertFalse(target.isPalindrome("home"));
 		assertFalse(target.isPalindrome("1121"));
 		assertTrue(target.isPalindrome("poiiop"));
 		assertTrue(target.isPalindrome("123454321"));
 		assertTrue(target.isPalindrome("@#$%y%$#@"));
+		assertTrue(target.isPalindrome("@#$%%$#@"));
 		assertTrue(target.isPalindrome("1221"));
 		assertTrue(target.isPalindrome("12521"));
-		assertTrue(target.isPalindrome(""));
-		assertFalse(target.isPalindrome(null));
+		assertTrue(target.isPalindrome("aa"));
+		assertFalse(target.isPalindrome("ab"));
+		assertFalse(target.isPalindrome("a"));
+		assertFalse(target.isPalindrome(""));
+		try {
+			target.isPalindrome(null);
+		} catch (Exception e) {
+			assertEquals(Exception.class.getName(), e.getClass().getName());
+		}
 	}
 
 }
