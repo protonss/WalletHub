@@ -47,6 +47,7 @@ So I decided to work with two files: origialFile and AuxFile and to divide this 
 	For every phrase in the originalFile I loop over the AuxFile. 
 	
 	c)Sort AuxFile
+	From this point on, I don't use the original file anymore.
 	I loop over AuxFile sorting it according to the number of occurrences.
 	The result should look like:
 		Microsoft Bing|45
@@ -54,10 +55,7 @@ So I decided to work with two files: origialFile and AuxFile and to divide this 
 	Again, I'm reading from and writing to the same file. I use RandomAccessFile library again to do this.
 
 	d)Truncate AuxFile 
-	Inside a for loop up to 100000 over the AuxFile, in every line I delete the number of occurrences and replace the Id with its corresponding in AuxFile.
-	The result should look like this: 
-		Microsoft Bing
-		Foobar Candy
+	Inside a for loop up to 100000, I find the 100000th line and then truncate the file.
 		
 Comment: Maybe this issue deserves a deeper research. There might be another more elegant solution in BigData researches. 
 Maybe using Operational System native methods/functions for this matter would work better and faster. And we can, off course, call those methods/functions from inside a Java application.

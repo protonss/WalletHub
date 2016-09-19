@@ -3,6 +3,7 @@ package answers;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
@@ -11,7 +12,7 @@ import java.nio.file.Paths;
 
 public class TopPhrases {
 
-	public static final int listSize = 3;
+	public static final int listSize = 100000;
 
 	// change these parameter for your OS
 	public static final String charset = "ISO-8859-1";
@@ -20,24 +21,25 @@ public class TopPhrases {
 	private String resultFile;
 
 	public static final String stringSeparator = "|";
-	public static int id = 1;
 
 	public static final long RECORD_LENGTH = 10;
 	public static final String EMPTY_STRING = " ";
 
 	public TopPhrases(String originalFile, String resultFile) {
-		this.originalFile = originalFile;
-		File f = new File(originalFile);
-		this.resultFile = f.getAbsolutePath().replace(f.getName(), "") + File.separator + "resultFile.txt";
+		File of = new File(originalFile);
+		File rf = new File(resultFile);
+		this.resultFile = of.getAbsolutePath().replace(of.getName(), "") + File.separator + rf.getName();
+		this.originalFile = of.getAbsolutePath().replace(of.getName(), "") + File.separator + of.getName();
 	}
 
 	public void rank() {
 		try {
 			deleteTmpFiles();
 
+			/*The three steps described in README file*/
 			createResultFile();
 			sortResultFile();
-			truncateResultFile(); 
+			truncateResultFile();
 
 			System.out.println("done.");
 		} catch (Exception e) {
@@ -46,18 +48,21 @@ public class TopPhrases {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private void truncateResultFile() throws IOException {
+		FileOutputStream tmpFile = new FileOutputStream("tmpFile");
 		try (RandomAccessFile resulrFileRW = new RandomAccessFile(resultFile, "rwd")) {
 			String line;
-			int c = 0;
+			int c = 1;
 			while ((line = resulrFileRW.readLine()) != null) {
-				if (c <= listSize)
-					resulrFileRW.getChannel().truncate(resulrFileRW.read());
+				if (c <= listSize) {
+					tmpFile.write((line + System.getProperty("line.separator")).getBytes());
+				}
 				c++;
 			}
 			resulrFileRW.close();
+			tmpFile.close();
 		}
+		Helper.renameFile("tmpFile", resultFile);
 	}
 
 	private void deleteTmpFiles() {
@@ -91,7 +96,7 @@ public class TopPhrases {
 		}
 	}
 
-	public void createResultFile() throws Exception {
+	private void createResultFile() throws Exception {
 		try (BufferedReader originalFileReader = Files.newBufferedReader(Paths.get(originalFile), Charset.forName(TopPhrases.charset))) {
 			while (originalFileReader.ready()) {
 				String line = originalFileReader.readLine();
@@ -104,7 +109,7 @@ public class TopPhrases {
 		}
 	}
 
-	public void writeToResultFile(String originalPhrase) throws FileNotFoundException, IOException {
+	private void writeToResultFile(String originalPhrase) throws FileNotFoundException, IOException {
 		new File(resultFile).createNewFile();
 		try (RandomAccessFile faFile = new RandomAccessFile(resultFile, "rwd")) {
 			String line;
@@ -113,12 +118,11 @@ public class TopPhrases {
 			while ((line = faFile.readLine()) != null) {
 				line = line.trim();
 				String exportedPhrase = Helper.getFirstElement(line);
-				int id = Integer.valueOf(Helper.getThirdElement(line));
 				occur = Integer.valueOf(Helper.getSecondElement(line));
 				if (originalPhrase.equals(exportedPhrase)) {
 					occur++;
 					faFile.seek(previousPointer);
-					writeLine(faFile, originalPhrase, occur, String.valueOf(id));
+					writeLine(faFile, originalPhrase, occur.toString());
 					return;
 				} else
 					previousPointer = faFile.getFilePointer();
@@ -129,16 +133,16 @@ public class TopPhrases {
 		}
 	}
 
-	private void writeLine(RandomAccessFile raf, String phrase, Integer occur, String id) throws IOException {
+	private void writeLine(RandomAccessFile raf, String phrase, String occur) throws IOException {
 		if (phrase.length() <= 0)
 			return;
-		String newLine = phrase + stringSeparator + occur.toString() + stringSeparator + id;
+		String newLine = phrase + stringSeparator + occur.toString();
 		raf.writeBytes(newLine);
 		Helper.printCounter();
 	}
 
 	private void newLine(RandomAccessFile raf, String originalPhrase, Integer occur, long previousPointer) throws IOException {
-		this.writeLine(raf, originalPhrase, occur, paddingRight(String.valueOf(id++)) + System.getProperty("line.separator").toString());
+		this.writeLine(raf, originalPhrase, paddingRight(String.valueOf(occur)) + System.getProperty("line.separator").toString());
 	}
 
 	private String paddingRight(String source) {
@@ -159,11 +163,7 @@ class Helper {
 	private static int count = 1;
 
 	public static String getSecondElement(String line) {
-		return line.substring(line.indexOf(TopPhrases.stringSeparator) + 1, line.lastIndexOf(TopPhrases.stringSeparator));
-	}
-
-	public static String getThirdElement(String line) {
-		return line.substring(line.lastIndexOf(TopPhrases.stringSeparator) + 1, line.length());
+		return line.substring(line.indexOf(TopPhrases.stringSeparator) + 1, line.length());
 	}
 
 	public static String getFirstElement(String line) {
@@ -189,6 +189,13 @@ class Helper {
 			}
 			oReader.close();
 		}
+	}
+
+	public static void renameFile(String oldName, String newName) {
+		File file1 = new File(oldName);
+		File file2 = new File(newName);
+		file2.delete();
+		file1.renameTo(file2);
 	}
 
 }

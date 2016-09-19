@@ -2,6 +2,8 @@ package tests;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Calendar;
+import java.util.Date;
 
 import junit.framework.TestCase;
 
@@ -22,19 +24,32 @@ public class TopPhrases extends TestCase {
 
 		File file = new File(originalFile);
 		FileOutputStream fos = new FileOutputStream(file);
-		for (int i = 0; i < 10; i++)
-			fos.write(new StringBuilder().append("Olympics 2012 | PGA | Foobar Candy | CNET | Microsoft Bing").append(System.getProperty("line.separator")).toString().getBytes());
-		for (int i = 0; i < 10; i++)
-			fos.write(new StringBuilder().append(" PGA | Foobar Candy | Olympics 2012").append(System.getProperty("line.separator")).toString().getBytes());
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 2; i++)
+			fos.write(new StringBuilder()
+					.append(
+							"Olympics 2012 | PG012 | PG012 | PG012 | PGA | FoA | FoA | FoA | Foobar Candy | CNar Candy | CNar Candy | CNar Candy | CNET | MicroET | MicroET | MicroET | MicroET | Microsoft Bing")
+					.append(System.getProperty("line.separator")).toString().getBytes());
+		for (int i = 0; i < 2; i++)
+			fos.write(
+					new StringBuilder().append(" PGA | FoobA | FoobA | FoobA | Foobar Candy | Olyndy | Olyndy | Olyndy | Olympics 2012").append(System.getProperty("line.separator")).toString().getBytes());
+		for (int i = 0; i < 4; i++)
 			fos.write(new StringBuilder().append("Foobar Candy | Olympics 2012 ").append(System.getProperty("line.separator")).toString().getBytes());
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < 20; i++)
 			fos.write(new StringBuilder().append("Foobar Candy ").append(System.getProperty("line.separator")).toString().getBytes());
 		fos.close();
 
 		// run method
+		Calendar b = Calendar.getInstance();
+		b.setTime(new Date());
+
 		answers.TopPhrases top = new answers.TopPhrases(originalFile, resultFile);
 		top.rank();
+
+		Calendar e = Calendar.getInstance();
+		e.setTime(new Date());
+
+		long diff = (e.getTimeInMillis() - b.getTimeInMillis()) / 1000;
+		System.out.println(diff);
 	}
 
 }
