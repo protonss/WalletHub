@@ -1,8 +1,8 @@
-/* 
- 
-In order to test TopPhrases please run the JUnit test class below
-The expected result are at the bottom of this file.
- 
+/**
+ * 
+ * In order to test TopPhrases please run the JUnit test class below
+ * The expected result are at the bottom of this file.
+ *  
 */
 
 

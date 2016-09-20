@@ -1,3 +1,8 @@
+/**
+ *  In order to test ComplementaryPairs please run the JUnit test class below
+ *  
+*/
+
 package tests;
 
 import java.util.ArrayList;
