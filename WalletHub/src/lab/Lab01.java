@@ -16,6 +16,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
+
 import answers.TopPhrases;
 
 public class Lab01 {
@@ -24,20 +27,49 @@ public class Lab01 {
 	public static final String SOURCE_FILE = "C:\\tmp\\source.txt";
 	public static final int KB = 1024;
 	public static final int MB = KB * 1024;
-	public static final int UNIT = KB * 64;
-	public static final float TAMANHO = 128 * MB;
+	public static int UNIT = KB * 64;
+	public static float TAMANHO = 2 * MB;
 
 	private static int COUNT = 1;
 
 	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 		Lab01 l = new Lab01();
-		l.createSource();
 
-		// l.readWithFilesClass();
-		l.readWithFileInputStreamClass();
-		l.readWithRandomAccessFile();
-		l.readBufferedReaderClass();
+		l.comparar(l);
+
+	}
+
+	public void comparar(Lab01 l) {
+		for (int i = 1; i <= 8; i++) {
+			System.out.printf("%n%s File Size: %s MB   Unit: %s KB%n", i, TAMANHO / MB, UNIT / KB);
+			l.createSource();
+			// l.readApacheCommonsIo();
+			l.readBufferedReaderClass();
+			// l.readWithFileInputStreamClass();
+			// l.readWithRandomAccessFile();
+
+			TAMANHO = TAMANHO * 2;
+			// UNIT += 8 * KB;
+		}
+	}
+
+	private void readApacheCommonsIo() {
+		Date antes = new Date();
+		LineIterator it;
+		try {
+			it = FileUtils.lineIterator(new File(SOURCE_FILE), "UTF-8");
+			try {
+				while (it.hasNext()) {
+					String line = it.nextLine();
+				}
+			} finally {
+				LineIterator.closeQuietly(it);
+			}
+			displayTimeDiff(antes, new Date(), "Apache Commons Io");
+		} catch (IOException e) {
+			System.out.println("Apache Commons IO deu pau . " + e.getMessage());
+		}
 	}
 
 	private void readBufferedReaderClass() {
