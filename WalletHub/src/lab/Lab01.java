@@ -21,24 +21,29 @@ import answers.TopPhrases;
 public class Lab01 {
 
 	public static final String CHARSET = "ISO-8859-1";
-	public static final String SOURCE_FILE = "C:\\temp\\source.txt";
-	public static final float REPETITIONS = 200 * 1024 * 1024;
+	public static final String SOURCE_FILE = "C:\\tmp\\source.txt";
+	public static final int KB = 1024;
+	public static final int MB = KB * 1024;
+	public static final int UNIT = KB * 64;
+	public static final float TAMANHO = 128 * MB;
 
 	private static int COUNT = 1;
 
-	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
 		Lab01 l = new Lab01();
-		l.createSourceFile();
+		l.createSource();
 
 		// l.readWithFilesClass();
 		l.readWithFileInputStreamClass();
-		//l.readWithRandomAccessFile();
+		l.readWithRandomAccessFile();
 		l.readBufferedReaderClass();
 	}
 
 	private void readBufferedReaderClass() {
 		Date antes = new Date();
-		try (BufferedReader originalFileReader = Files.newBufferedReader(Paths.get(SOURCE_FILE), Charset.forName(TopPhrases.charset))) {
+		try (BufferedReader originalFileReader = Files.newBufferedReader(Paths.get(SOURCE_FILE),
+				Charset.forName(TopPhrases.charset))) {
 			while (originalFileReader.ready()) {
 				String line = originalFileReader.readLine();
 			}
@@ -83,11 +88,24 @@ public class Lab01 {
 		displayTimeDiff(antes, new Date(), "File Input Stream");
 	}
 
+	private void createSource() {
+		File f = new File(SOURCE_FILE);
+		// if (!f.exists() || f.length() != TAMANHO) {
+		this.createSourceFile();
+		// }
+	}
+
 	private void createSourceFile() {
 		Date antes = new Date();
+		try {
+			new File(SOURCE_FILE).createNewFile();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		try (FileOutputStream fos = new FileOutputStream(new File(SOURCE_FILE))) {
-			for (int i = 0; i < REPETITIONS * 8; i++) {
-				fos.write(new StringBuilder().append("Foobar Candy ").append(System.getProperty("line.separator")).toString().getBytes());
+			byte[] bs = new byte[UNIT];
+			for (int i = 0; i < TAMANHO / UNIT; i++) {
+				fos.write(bs);
 				fos.flush();
 			}
 			fos.close();
