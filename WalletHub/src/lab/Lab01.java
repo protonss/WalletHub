@@ -28,12 +28,11 @@ public class Lab01 {
 	public static final int KB = 1024;
 	public static final int MB = KB * 1024;
 	public static int UNIT = KB * 64;
-	public static float TAMANHO = 2 * MB;
+	public static float TAMANHO = 200 * MB;
 
 	private static int COUNT = 1;
 
-	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
+	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Lab01 l = new Lab01();
 
 		l.comparar(l);
@@ -41,15 +40,15 @@ public class Lab01 {
 	}
 
 	public void comparar(Lab01 l) {
-		for (int i = 1; i <= 8; i++) {
+		for (int i = 1; i <= 80; i++) {
 			System.out.printf("%n%s File Size: %s MB   Unit: %s KB%n", i, TAMANHO / MB, UNIT / KB);
 			l.createSource();
-			// l.readApacheCommonsIo();
-			l.readBufferedReaderClass();
-			// l.readWithFileInputStreamClass();
-			// l.readWithRandomAccessFile();
+			l.readApacheCommonsIo();
+			//l.readBufferedReaderClass();
+			//l.readWithFileInputStreamClass();
+			//l.readWithRandomAccessFile();
 
-			TAMANHO = TAMANHO * 2;
+			TAMANHO += 8 * MB;
 			// UNIT += 8 * KB;
 		}
 	}
@@ -61,11 +60,12 @@ public class Lab01 {
 			it = FileUtils.lineIterator(new File(SOURCE_FILE), "UTF-8");
 			try {
 				while (it.hasNext()) {
-					String line = it.nextLine();
+					String line = it.next();
 				}
 			} finally {
 				LineIterator.closeQuietly(it);
 			}
+			it.close();
 			displayTimeDiff(antes, new Date(), "Apache Commons Io");
 		} catch (IOException e) {
 			System.out.println("Apache Commons IO deu pau . " + e.getMessage());
@@ -74,8 +74,7 @@ public class Lab01 {
 
 	private void readBufferedReaderClass() {
 		Date antes = new Date();
-		try (BufferedReader originalFileReader = Files.newBufferedReader(Paths.get(SOURCE_FILE),
-				Charset.forName(TopPhrases.charset))) {
+		try (BufferedReader originalFileReader = Files.newBufferedReader(Paths.get(SOURCE_FILE), Charset.forName(TopPhrases.charset))) {
 			while (originalFileReader.ready()) {
 				String line = originalFileReader.readLine();
 			}
