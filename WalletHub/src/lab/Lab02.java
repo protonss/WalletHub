@@ -16,79 +16,65 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
+import org.apache.commons.io.FileSystemUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 
 import answers.TopPhrases;
 
-public class Lab01 {
+public class Lab02 {
 
 	public static final String CHARSET = "ISO-8859-1";
 	public static final String SOURCE_FILE = "C:\\temp\\source.txt";
 	public static final int KB = 1024;
 	public static final int MB = KB * 1024;
 	public static int UNIT = 128 * KB;
-	public static float TAMANHO = 2 * MB;
+	public static float TAMANHO = 264 * MB;
 
 	private static int COUNT = 1;
 
 	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
-		Lab01 l = new Lab01();
+		Lab02 l = new Lab02();
 		l.comparar(l);
 	}
 
-	public void comparar(Lab01 l) {
+	public void comparar(Lab02 l) {
 		for (int i = 1; i <= 80; i++) {
 			System.out.printf("%n%s File Size: %s MB   Unit: %s KB%n", i, TAMANHO / MB, UNIT / KB);
 			l.createSource();
-
 			l.readApacheCommonsIo();
-			l.readApacheCommonsIo2();
-			//l.readBufferedReaderClass();
-			//l.readWithFileInputStreamClass();
-			//l.readWithRandomAccessFile();
+			// l.readBufferedReaderClass();
+			// l.readWithFileInputStreamClass();
+			// l.readWithRandomAccessFile();
 
-			TAMANHO *= 2;
-		    //UNIT /= 2;
+			// TAMANHO *= 2;
+			// UNIT /= 2;
 		}
+	}
+
+	private void createSourceFile() {
+		System.out.print("Create Source File");
+		Date antes = new Date();
+
+		new File(new File(SOURCE_FILE).getPath() + "/labtmp").mkdirs();
+
+		displayTimeDiff(antes, new Date());
 	}
 
 	private void readApacheCommonsIo() {
 		System.out.print("Apache Commons Io");
 		Date antes = new Date();
 		LineIterator it = null;
+		
 		try {
-			it = FileUtils.lineIterator(new File(SOURCE_FILE));
-			try {
-				while (it.hasNext()) {
-					String line = it.next();
-				}
-				it.close();
-			} finally {
-				LineIterator.closeQuietly(it);
-			}
-			it = null;
-		} catch (IOException e) {
-		} finally {
-			if (null != it)
-				it = null;
-		}
-		displayTimeDiff(antes, new Date());
-	}
-
-
-	private void readApacheCommonsIo2() {
-		System.out.print("Apache Commons Io 2");
-		Date antes = new Date();
-		LineIterator it = null;
-		try {
-			FileUtils.lineIterator(new File(SOURCE_FILE)).forEachRemaining(line->{
+			Files.lines(Paths.get(SOURCE_FILE)).forEach(line->{
 				line.length();
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
-		};
+		}
+		
 		displayTimeDiff(antes, new Date());
 	}
 
@@ -150,32 +136,7 @@ public class Lab01 {
 		// }
 	}
 
-	private void createSourceFile() {
-		System.out.print("Create Source File");
-		Date antes = new Date();
-		try {
-			new File(SOURCE_FILE).createNewFile();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		try (FileOutputStream fos = new FileOutputStream(new File(SOURCE_FILE))) {
-			byte[] bs = new byte[UNIT];
-			for (int i = 0; i < TAMANHO / UNIT; i++) {
-				fos.write(bs);
-				fos.flush();
-			}
-			fos.close();
-		} catch (FileNotFoundException e) {
-			System.out.println("FileOutputStream");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("FileOutputStream");
-			e.printStackTrace();
-		}
-		displayTimeDiff(antes, new Date());
-	}
-
-	private static void displayTimeDiff(Date before, Date after) {
+	public static void displayTimeDiff(Date before, Date after) {
 		Calendar t1 = Calendar.getInstance();
 		t1.setTime(before);
 		Calendar t2 = Calendar.getInstance();
@@ -184,7 +145,7 @@ public class Lab01 {
 		System.out.printf(": \t\t %s mili segundos %n", new DecimalFormat("###,###.###").format(res));
 	}
 
-	private static void printCounter() {
+	public static void printCounter() {
 		if (++COUNT % 100 == 0)
 			System.out.println(COUNT);
 		if (COUNT % 10 == 0)
