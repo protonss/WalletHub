@@ -24,19 +24,18 @@ import answers.TopPhrases;
 public class Lab01 {
 
 	public static final String CHARSET = "ISO-8859-1";
-	public static final String SOURCE_FILE = "C:\\tmp\\source.txt";
+	public static final String SOURCE_FILE = "C:\\temp\\source.txt";
 	public static final int KB = 1024;
 	public static final int MB = KB * 1024;
-	public static int UNIT = KB * 64;
-	public static float TAMANHO = 200 * MB;
+	public static int UNIT = 128 * KB;
+	public static float TAMANHO = 264 * MB;
 
 	private static int COUNT = 1;
 
-	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
 		Lab01 l = new Lab01();
-
 		l.comparar(l);
-
 	}
 
 	public void comparar(Lab01 l) {
@@ -44,18 +43,19 @@ public class Lab01 {
 			System.out.printf("%n%s File Size: %s MB   Unit: %s KB%n", i, TAMANHO / MB, UNIT / KB);
 			l.createSource();
 			l.readApacheCommonsIo();
-			//l.readBufferedReaderClass();
-			//l.readWithFileInputStreamClass();
-			//l.readWithRandomAccessFile();
+			l.readBufferedReaderClass();
+			// l.readWithFileInputStreamClass();
+			// l.readWithRandomAccessFile();
 
-			TAMANHO += 8 * MB;
-			// UNIT += 8 * KB;
+			//TAMANHO *= 2;
+		    //UNIT /= 2;
 		}
 	}
 
 	private void readApacheCommonsIo() {
+		System.out.print("Apache Commons Io");
 		Date antes = new Date();
-		LineIterator it;
+		LineIterator it = null;
 		try {
 			it = FileUtils.lineIterator(new File(SOURCE_FILE), "UTF-8");
 			try {
@@ -64,27 +64,35 @@ public class Lab01 {
 				}
 			} finally {
 				LineIterator.closeQuietly(it);
+				;
 			}
 			it.close();
-			displayTimeDiff(antes, new Date(), "Apache Commons Io");
+			it = null;
+			displayTimeDiff(antes, new Date());
 		} catch (IOException e) {
 			System.out.println("Apache Commons IO deu pau . " + e.getMessage());
+		} finally {
+			if (null != it)
+				it = null;
 		}
 	}
 
 	private void readBufferedReaderClass() {
+		System.out.print("Buffered Reader");
 		Date antes = new Date();
-		try (BufferedReader originalFileReader = Files.newBufferedReader(Paths.get(SOURCE_FILE), Charset.forName(TopPhrases.charset))) {
+		try (BufferedReader originalFileReader = Files.newBufferedReader(Paths.get(SOURCE_FILE),
+				Charset.forName(TopPhrases.charset))) {
 			while (originalFileReader.ready()) {
 				String line = originalFileReader.readLine();
 			}
 		} catch (Exception e) {
 			System.out.println("Buffered Reader deu pau. " + e.getMessage());
 		}
-		displayTimeDiff(antes, new Date(), "Buffered Reader");
+		displayTimeDiff(antes, new Date());
 	}
 
 	private void readWithRandomAccessFile() {
+		System.out.print("Random Access File");
 		Date antes = new Date();
 		try (RandomAccessFile faFile = new RandomAccessFile(SOURCE_FILE, "r")) {
 			@SuppressWarnings("unused")
@@ -95,10 +103,11 @@ public class Lab01 {
 		} catch (Exception e) {
 			System.out.println("Random Access File deu pau. " + e.getMessage());
 		}
-		displayTimeDiff(antes, new Date(), "Random Access File");
+		displayTimeDiff(antes, new Date());
 	}
 
 	private void readWithFileInputStreamClass() {
+		System.out.print("File Input Stream");
 		Date antes = new Date();
 		FileInputStream inputStream = null;
 		Scanner sc = null;
@@ -116,7 +125,7 @@ public class Lab01 {
 				sc.close();
 			}
 		}
-		displayTimeDiff(antes, new Date(), "File Input Stream");
+		displayTimeDiff(antes, new Date());
 	}
 
 	private void createSource() {
@@ -127,6 +136,7 @@ public class Lab01 {
 	}
 
 	private void createSourceFile() {
+		System.out.print("Create Source File");
 		Date antes = new Date();
 		try {
 			new File(SOURCE_FILE).createNewFile();
@@ -147,16 +157,16 @@ public class Lab01 {
 			System.out.println("FileOutputStream");
 			e.printStackTrace();
 		}
-		displayTimeDiff(antes, new Date(), "Create Source File");
+		displayTimeDiff(antes, new Date());
 	}
 
-	public static void displayTimeDiff(Date before, Date after, String msg) {
+	public static void displayTimeDiff(Date before, Date after) {
 		Calendar t1 = Calendar.getInstance();
 		t1.setTime(before);
 		Calendar t2 = Calendar.getInstance();
 		t2.setTime(after);
 		long res = ((t2.getTimeInMillis() - t1.getTimeInMillis()) / 1);
-		System.out.printf("%s \t %s%n", new DecimalFormat("###,###.###").format(res), msg);
+		System.out.printf(": \t\t %s mili segundos %n", new DecimalFormat("###,###.###").format(res));
 	}
 
 	public static void printCounter() {
